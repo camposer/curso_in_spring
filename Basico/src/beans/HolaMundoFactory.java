@@ -1,3 +1,5 @@
+package beans;
+
 
 public abstract class HolaMundoFactory {
 	public static IHolaMundo createHolaMundo() {

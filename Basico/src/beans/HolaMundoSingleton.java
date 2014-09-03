@@ -1,3 +1,4 @@
+package beans;
 
 public class HolaMundoSingleton {
 	private static HolaMundoSingleton instance;

@@ -4,5 +4,23 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-		
+
+	<bean id="holaMundo" class="beans.HolaMundo">
+		<property name="nombre" value="Juan"/>
+	</bean>
+	
+	<bean id="holaMundo2" class="beans.HolaMundo"/>
+	
+	<bean id="holaMundo3" class="beans.HolaMundo">
+		<constructor-arg name="nombre" value="María"/>
+	</bean>
+
+	<bean id="helloWorld" class="beans.HelloWorld">
+		<property name="nombre"><value>Pedro</value></property>
+	</bean>
+
+	<bean id="helloWorld2" class="beans.HelloWorld" scope="prototype">
+		<property name="nombre"><value>Pedro</value></property>
+	</bean>
+
 </beans>		

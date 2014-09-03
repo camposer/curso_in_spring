@@ -1,3 +1,4 @@
+package beans;
 
 public class HelloWorld implements IHolaMundo {
 	private String nombre;

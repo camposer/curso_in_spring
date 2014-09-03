@@ -1,3 +1,4 @@
+package beans;
 
 public interface IHolaMundo {
 	public String saludar();
