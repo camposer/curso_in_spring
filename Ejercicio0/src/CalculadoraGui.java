@@ -7,11 +7,17 @@ public class CalculadoraGui {
 	private Scanner scanner;
 	private ICalculadora calc;
 	
+	public void setCalculadora(ICalculadora calc) {
+		this.calc = calc;
+	}
+	
 	public CalculadoraGui() {
 		this.scanner = new Scanner(System.in);
+		/*
 		this.calc = 
 				new ClassPathXmlApplicationContext("applicationContext.xml")
 				.getBean("calculadora", ICalculadora.class);
+		*/
 	}
 	
 	public void iniciar() {
@@ -25,6 +31,9 @@ public class CalculadoraGui {
 			System.out.println("5. Salir");
 			System.out.println("? ");
 			String opcion = scanner.nextLine();
+
+			if (opcion.equals("5")) // Saliendo 
+				break;
 			
 			System.out.print("a? ");
 			String sa = scanner.nextLine();
@@ -42,13 +51,19 @@ public class CalculadoraGui {
 				System.out.println(a + " * " + b + " = " + calc.multiplicar(a, b));
 			else if (opcion.equals("4"))
 				System.out.println(a + " / " + b + " = " + calc.dividir(a, b));
-			else if (opcion.equals("5"))
-				break;
 			
 		}
 	}
 	
 	public static void main(String[] args) {
-		new CalculadoraGui().iniciar();
+		/*
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+		CalculadoraGui gui = ctx.getBean("calculadoraGui", 
+				CalculadoraGui.class);
+		gui.iniciar();
+		*/
+		new ClassPathXmlApplicationContext("applicationContext.xml")
+			.getBean("calculadoraGui", CalculadoraGui.class)
+			.iniciar();
 	}
 }
