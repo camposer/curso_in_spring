@@ -6,12 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import service.PersonaService;
 import model.Persona;
+import service.IPersonaService;
 
 public class PersonaGui {
 	private Scanner scanner;
-	
+	private IPersonaService personaService;
+
 	public PersonaGui() {
 		this.scanner = new Scanner(System.in);
 	}
@@ -48,7 +49,7 @@ public class PersonaGui {
 		String sid = scanner.nextLine();
 		Integer id = Integer.parseInt(sid);
 		
-		new PersonaService().eliminarPersona(id);
+		personaService.eliminarPersona(id);
 	}
 
 	private void modificarPersona() {
@@ -56,7 +57,7 @@ public class PersonaGui {
 		String sid = scanner.nextLine();
 		Integer id = Integer.parseInt(sid);
 		
-		Persona p = new PersonaService().obtenerPersona(id);
+		Persona p = personaService.obtenerPersona(id);
 
 		if (p == null) { // Si no existe la persona sale del método
 			System.out.println("No existe la persona para el id = " + id);
@@ -90,7 +91,7 @@ public class PersonaGui {
 			return;
 		}
 		
-		new PersonaService().modificarPersona(p);
+		personaService.modificarPersona(p);
 
 	}
 
@@ -99,12 +100,12 @@ public class PersonaGui {
 		String sid = scanner.nextLine();
 		Integer id = Integer.parseInt(sid);
 		
-		Persona p = new PersonaService().obtenerPersona(id);
+		Persona p = personaService.obtenerPersona(id);
 		System.out.println(p);
 	}
 
 	private void obtenerPersonas() {
-		List<Persona> personas = new PersonaService().obtenerPersonas();
+		List<Persona> personas = personaService.obtenerPersonas();
 		if (personas != null) for (Persona p : personas) 
 			System.out.println(p);
 	}
@@ -130,7 +131,11 @@ public class PersonaGui {
 		
 		Persona p = new Persona(nombre, apellido, altura, fnac);
 		
-		new PersonaService().agregarPersona(p);
+		personaService.agregarPersona(p);
+	}
+
+	public void setPersonaService(IPersonaService personaService) {
+		this.personaService = personaService;
 	}
 
 }
