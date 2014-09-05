@@ -5,6 +5,7 @@ import java.util.List;
 import model.Ordenador;
 import model.Persona;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import dao.IOrdenadorDao;
@@ -13,6 +14,7 @@ import exception.AppServiceException;
 
 @Transactional
 public class OrdenadorService implements IOrdenadorService {
+	@Autowired
 	private IOrdenadorDao ordenadorDao;
 	private IPersonaService personaService;
 

@@ -7,9 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import exception.AppDaoException;
 
 public abstract class GenericDao<T, K> implements IDao<T, K> {
+	@Autowired
+	@Qualifier("entityManager")
 	@PersistenceContext // Permite el manejo de @Transactional
 	protected EntityManager em;
 	protected Class<T> clase;
@@ -20,10 +25,6 @@ public abstract class GenericDao<T, K> implements IDao<T, K> {
 		// Utiliza la API de Reflection de Java
 		clase = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
-	}
-	
-	public void setEntityManager(EntityManager em) {
-		this.em = em;
 	}
 	
 	@Override
