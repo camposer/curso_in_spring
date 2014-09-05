@@ -6,19 +6,21 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.Ordenador;
-import service.OrdenadorService;
+import service.IOrdenadorService;
+import servlet.BaseServlet;
 
 @WebServlet("/ordenador/Mostrar")
-public class MostrarServlet extends HttpServlet {
+public class MostrarServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IOrdenadorService ordenadorService = ctx.getBean("ordenadorService", IOrdenadorService.class);
+		
 		HttpSession sesion = request.getSession();
 		List<String> errores = new ArrayList<String>();
 		String sid = request.getParameter("id");
@@ -34,7 +36,7 @@ public class MostrarServlet extends HttpServlet {
 		
 		try {
 			if (id != null)
-				o = new OrdenadorService().obtenerOrdenador(id);
+				o = ordenadorService.obtenerOrdenador(id);
 		} catch (Exception e) {
 			errores.add("Error al consultar la ordenador en BD");
 			e.printStackTrace();

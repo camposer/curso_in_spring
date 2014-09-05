@@ -6,20 +6,22 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Ordenador;
 import model.Persona;
-import service.OrdenadorService;
+import service.IOrdenadorService;
+import servlet.BaseServlet;
 import exception.AppServiceException;
 
 @WebServlet("/ordenador/Modificar")
-public class ModificarServlet extends HttpServlet {
+public class ModificarServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IOrdenadorService ordenadorService = ctx.getBean("ordenadorService", IOrdenadorService.class);
+		
 		List<String> errores = new ArrayList<String>();
 		Integer id = null;
 		Integer pId = null;
@@ -58,9 +60,8 @@ public class ModificarServlet extends HttpServlet {
 			o.setSerial(serial);
 			o.setPersona(p);
 			
-			OrdenadorService os = new OrdenadorService();
 			try {
-				os.modificarOrdenador(o);
+				ordenadorService.modificarOrdenador(o);
 			} catch (AppServiceException e) {
 				errores.add("Error de acceso a datos");
 				e.printStackTrace();

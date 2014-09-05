@@ -41,4 +41,10 @@
 		<property name="transactionManager" ref="transactionManager"/>
 	</bean>
 	
+	<bean id="ordenadorService" class="service.OrdenadorService"
+		scope="prototype" init-method="init">
+		<property name="ordenadorDao" ref="ordenadorDao"/>
+		<property name="personaService" ref="personaService"/>
+		<property name="transactionManager" ref="transactionManager"/>
+	</bean>
 </beans>		

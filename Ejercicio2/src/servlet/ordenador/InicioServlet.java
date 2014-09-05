@@ -5,24 +5,27 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Ordenador;
 import model.Persona;
-import service.OrdenadorService;
-import service.PersonaService;
+import service.IOrdenadorService;
+import service.IPersonaService;
+import servlet.BaseServlet;
 
 @WebServlet("/ordenador/Inicio")
-public class InicioServlet extends HttpServlet {
+public class InicioServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IPersonaService personaService = ctx.getBean("personaService", IPersonaService.class);
+		IOrdenadorService ordenadorService = ctx.getBean("ordenadorService", IOrdenadorService.class);
+		
 		// Recuperas los ordenadores de la BD
 		List<Ordenador> ordenadores = null;
 		try {
-			ordenadores = new OrdenadorService()
+			ordenadores = ordenadorService
 				.obtenerOrdenadoresOrdenadosPorEdad();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -31,7 +34,7 @@ public class InicioServlet extends HttpServlet {
 		// Recuperas las personas de la BD
 		List<Persona> personas = null;
 		try {
-			personas = new PersonaService().obtenerPersonas();
+			personas = personaService.obtenerPersonas();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

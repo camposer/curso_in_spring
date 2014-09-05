@@ -4,14 +4,35 @@ import java.util.List;
 
 import model.Ordenador;
 import model.Persona;
-import dao.OrdenadorDao;
+import transaction.ITransactionManager;
+import dao.IOrdenadorDao;
 import exception.AppDaoException;
 import exception.AppServiceException;
 
-public class OrdenadorService {
+public class OrdenadorService implements IOrdenadorService {
+	private IOrdenadorDao ordenadorDao;
+	private IPersonaService personaService;
+	private ITransactionManager transactionManager;
+	
+	public void setOrdenadorDao(IOrdenadorDao ordenadorDao) {
+		this.ordenadorDao = ordenadorDao;
+	}
+
+	public void setPersonaService(IPersonaService personaService) {
+		this.personaService = personaService;
+	}
+
+	public void setTransactionManager(ITransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
+
+	public void init() {
+		transactionManager.join(ordenadorDao);
+	}
+	
 	public List<Ordenador> obtenerOrdenadoresOrdenadosPorEdad() {
 		try {
-			return new OrdenadorDao()
+			return ordenadorDao
 				.obtenerTodosOrdenadosPorEdad();
 		} catch (AppDaoException e) {
 			throw new AppServiceException(e);
@@ -20,7 +41,7 @@ public class OrdenadorService {
 
 	public List<Ordenador> obtenerOrdenadores() {
 		try {
-			return new OrdenadorDao().obtenerTodos();
+			return ordenadorDao.obtenerTodos();
 		} catch (AppDaoException e) {
 			throw new AppServiceException(e);
 		}
@@ -28,8 +49,11 @@ public class OrdenadorService {
 
 	public void agregarOrdenador(Ordenador o) {
 		try {
+			// TODO No entra personaService en el mismo hilo transaccional!!! Resolver...
+			transactionManager.begin(); 
+
 			// Obteniendo un objeto persistente, por tanto validando que existe!
-			Persona p = new PersonaService().obtenerPersona(
+			Persona p = personaService.obtenerPersona(
 					o.getPersona().getId());
 			
 			if (p == null)
@@ -37,15 +61,19 @@ public class OrdenadorService {
 			
 			o.setPersona(p); // Reemplazando persona anterior por la referencia recién obtenida
 			
-			new OrdenadorDao().agregar(o);
+			ordenadorDao.agregar(o);
+			
+			transactionManager.commit();
 		} catch (AppDaoException e) {
+			if (transactionManager != null)
+				transactionManager.rollback();
 			throw new AppServiceException(e);
 		}
 	}
 
 	public Ordenador obtenerOrdenador(Integer id) {
 		try {
-			return new OrdenadorDao().obtener(id);
+			return ordenadorDao.obtener(id);
 		} catch (AppDaoException e) {
 			throw new AppServiceException(e);
 		}
@@ -54,8 +82,10 @@ public class OrdenadorService {
 	public void modificarOrdenador(Ordenador o) {
 		// TODO Validar si la persona existe en BD
 		try {
+			transactionManager.begin();
+			
 			// Obteniendo un objeto persistente, por tanto validando que existe!
-			Persona p = new PersonaService().obtenerPersona(
+			Persona p = personaService.obtenerPersona(
 					o.getPersona().getId());
 			
 			if (p == null)
@@ -63,8 +93,12 @@ public class OrdenadorService {
 			
 			o.setPersona(p); // Reemplazando persona anterior por la referencia recién obtenida
 			
-			new OrdenadorDao().modificar(o);
+			ordenadorDao.modificar(o);
+			
+			transactionManager.commit();
 		} catch (AppDaoException e) {
+			if (transactionManager != null)
+				transactionManager.rollback();
 			throw new AppServiceException(e);
 		}
 	}
@@ -72,8 +106,12 @@ public class OrdenadorService {
 	public void eliminarOrdenador(Integer id) {
 		// TODO Validar si la persona existe en BD
 		try {
-			new OrdenadorDao().eliminar(id);
+			transactionManager.begin();
+			ordenadorDao.eliminar(id);
+			transactionManager.commit();
 		} catch (AppDaoException e) {
+			if (transactionManager != null)
+				transactionManager.rollback();			
 			throw new AppServiceException(e);
 		}
 	}
