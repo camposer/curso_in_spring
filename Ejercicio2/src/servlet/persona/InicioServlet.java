@@ -5,23 +5,18 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import model.Persona;
 import service.IPersonaService;
-import service.PersonaService;
+import servlet.BaseServlet;
 
 @WebServlet("/persona/Inicio")
-public class InicioServlet extends HttpServlet {
+public class InicioServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
 		IPersonaService personaService = ctx.getBean("personaService", IPersonaService.class);
 		
 		// Recuperas las personas de la BD

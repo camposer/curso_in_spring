@@ -4,7 +4,10 @@ import java.util.List;
 
 import model.Ordenador;
 
-public class OrdenadorDao extends GenericDao<Ordenador, Integer> {
+public class OrdenadorDao 
+		extends GenericDao<Ordenador, Integer> 
+		implements IOrdenadorDao {
+	
 	public OrdenadorDao() {
 		this(true);
 	}

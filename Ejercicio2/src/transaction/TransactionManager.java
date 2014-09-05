@@ -4,18 +4,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import dao.GenericDao;
+import dao.IDao;
 
-public class TransactionManager {
+public class TransactionManager implements ITransactionManager {
 	protected EntityManager em;
 	protected EntityTransaction tx;
 
-	public TransactionManager() {
-		em = createEntityManager();
-		tx = em.getTransaction();
-		tx.begin();
+	public void setEntityManager(EntityManager em) {
+		this.em = em;
 	}
 	
+	public void init() {
+		tx = em.getTransaction();
+	}
+	
+	public void begin() {
+		tx.begin();
+	}
+
 	public void commit() {
 		tx.commit();
 	}
@@ -35,7 +41,7 @@ public class TransactionManager {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void join(GenericDao dao) {
+	public void join(IDao dao) {
 		dao.setEntityManager(em);
 	}
 	

@@ -5,9 +5,40 @@
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-	<bean id="personaService" class="service.PersonaService" scope="prototype">
-		<property name="personaDao" ref="personaDao"/>
+	<bean id="entityManagerFactory" 
+			class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="PersonaJpa" />
 	</bean>
-	<bean id="personaDao" class="dao.PersonaDao" scope="prototype"/>
+	
+	<bean id="entityManager"
+		factory-bean="entityManagerFactory"
+		factory-method="createEntityManager"
+		scope="prototype"
+		/>
+
+	<bean id="personaDao" class="dao.PersonaDao" scope="prototype">
+		<constructor-arg name="autoCommit" value="false"/>
+	</bean>
+	
+	<bean id="ordenadorDao" class="dao.OrdenadorDao" scope="prototype">
+		<constructor-arg name="autoCommit" value="false"/>
+	</bean>
+	
+	<bean id="transactionManager" class="transaction.TransactionManager"
+		scope="prototype" init-method="init">
+		<property name="entityManager" ref="entityManager"/>
+	</bean>
+		
+	<!-- 
+		1. Construyo personaService (invoco su constructor)
+		2. Inyecta las dependencias
+		3. Ejecuta el método init
+	 -->
+	<bean id="personaService" class="service.PersonaService"
+		scope="prototype" init-method="init">
+		<property name="personaDao" ref="personaDao"/>
+		<property name="ordenadorDao" ref="ordenadorDao"/>
+		<property name="transactionManager" ref="transactionManager"/>
+	</bean>
 	
 </beans>		

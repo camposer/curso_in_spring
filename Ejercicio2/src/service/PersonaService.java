@@ -5,18 +5,32 @@ import java.util.List;
 
 import model.Ordenador;
 import model.Persona;
-import transaction.TransactionManager;
+import transaction.ITransactionManager;
+import dao.IOrdenadorDao;
 import dao.IPersonaDao;
-import dao.OrdenadorDao;
-import dao.PersonaDao;
 import exception.AppDaoException;
 import exception.AppServiceException;
 
 public class PersonaService implements IPersonaService {
 	private IPersonaDao personaDao;
+	private IOrdenadorDao ordenadorDao;
+	private ITransactionManager transactionManager;
 	
 	public void setPersonaDao(IPersonaDao personaDao) {
 		this.personaDao = personaDao;
+	}
+	
+	public void setOrdenadorDao(IOrdenadorDao ordenadorDao) {
+		this.ordenadorDao = ordenadorDao;
+	}
+
+	public void setTransactionManager(ITransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
+
+	public void init() {
+		transactionManager.join(personaDao);
+		transactionManager.join(ordenadorDao);
 	}
 	
 	@Override
@@ -49,13 +63,8 @@ public class PersonaService implements IPersonaService {
 	
 	@Override
 	public void agregarPersona(Persona p) {
-		TransactionManager tm = null;
 		try {
-			tm = new TransactionManager();
-			PersonaDao personaDao = new PersonaDao(false);
-			OrdenadorDao ordenadorDao = new OrdenadorDao(false);
-			tm.join(personaDao);
-			tm.join(ordenadorDao);
+			transactionManager.begin();
 			
 			// Agregar persona
 			personaDao.agregar(p);
@@ -67,10 +76,10 @@ public class PersonaService implements IPersonaService {
 				ordenadorDao.agregar(o);
 			}
 			
-			tm.commit();
+			transactionManager.commit();
 		} catch (AppDaoException e) {
-			if (tm != null)
-				tm.rollback();
+			if (transactionManager != null)
+				transactionManager.rollback();
 			throw new AppServiceException(e);
 		}
 	}
@@ -88,22 +97,20 @@ public class PersonaService implements IPersonaService {
 	public void modificarPersona(Persona p) {
 		// TODO Validar si la persona existe en BD
 		try {
+			transactionManager.begin();
 			personaDao.modificar(p);
+			transactionManager.commit();
 		} catch (AppDaoException e) {
+			if (transactionManager != null)
+				transactionManager.rollback();
 			throw new AppServiceException(e);
 		}
 	}
 
 	@Override
 	public void eliminarPersona(Integer id) {
-		// TODO Validar si la persona existe en BD
-		TransactionManager tm = null;
 		try {
-			tm = new TransactionManager(); // new em y tx.begin()
-			PersonaDao personaDao = new PersonaDao(false); // El EntityManager no lo maneja el DAO (lo maneja un externo)
-			OrdenadorDao ordenadorDao = new OrdenadorDao(false); // em = null
-			tm.join(personaDao); // em = tm.getEntityManager()
-			tm.join(ordenadorDao);
+			transactionManager.begin();
 			
 			// Buscando la persona
 			Persona p = personaDao.obtener(id);
@@ -116,10 +123,10 @@ public class PersonaService implements IPersonaService {
 			// Eliminando la persona
 			personaDao.eliminar(id); 
 			
-			tm.commit();
+			transactionManager.commit();
 		} catch (AppDaoException e) {
-			if (tm != null)
-				tm.rollback();
+			if (transactionManager != null)
+				transactionManager.rollback();
 			throw new AppServiceException(e);
 		}
 	}

@@ -9,20 +9,22 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Ordenador;
 import model.Persona;
-import service.PersonaService;
+import service.IPersonaService;
+import servlet.BaseServlet;
 import exception.AppServiceException;
 
 @WebServlet("/persona/Agregar")
-public class AgregarServlet extends HttpServlet {
+public class AgregarServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IPersonaService personaService = ctx.getBean("personaService", IPersonaService.class);
+		
 		List<String> errores = new ArrayList<String>();
 		Date fecha = null;
 		Float altura = null;
@@ -66,9 +68,8 @@ public class AgregarServlet extends HttpServlet {
 			// Agregando a la persona
 			Persona p = new Persona(nombre, apellido, altura, fecha);
 			p.setOrdenadores(ordenadores);
-			PersonaService ps = new PersonaService();
 			try {
-				ps.agregarPersona(p, o);
+				personaService.agregarPersona(p, o);
 			} catch (AppServiceException e) {
 				errores.add("Error de acceso a datos");
 				e.printStackTrace();
