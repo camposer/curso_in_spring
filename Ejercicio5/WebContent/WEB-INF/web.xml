@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0">
+
+  <display-name>Ejercicio5</display-name>
+  
+  <!-- BEGIN: Spring -->
+  
+ 	<!-- Define el front controller -->
+     <servlet>
+         <servlet-name>mvc</servlet-name>
+         <servlet-class>
+             org.springframework.web.servlet.DispatcherServlet
+         </servlet-class>
+         <load-on-startup>1</load-on-startup>
+     </servlet>
+
+     <servlet-mapping>
+         <servlet-name>mvc</servlet-name>
+         <url-pattern>*.per</url-pattern>
+     </servlet-mapping>
+  
+  	<!-- 
+  		Lee el fichero de configuración especificado en la variable
+  		contextConfigLocation y carga el contexto de Spring (al arrancar el Contenedor Web) 
+  	-->
+  	<listener>
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+
+	<!-- Activa el file OpenSessionInView -->
+	<filter>
+	    <filter-name>OpenEntityManagerInViewFilter</filter-name>
+	    <filter-class>
+	        org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
+	    </filter-class>
+	    <init-param>
+	        <param-name>entityManagerFactoryBeanName</param-name>
+	        <param-value>entityManagerFactory</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>OpenEntityManagerInViewFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+ 	<!-- Convierte los parámetros de la petición y la respuesta a UTF-8 automáticamente -->
+	<filter>
+	    <filter-name>encoding-filter</filter-name>
+	    <filter-class>
+	        org.springframework.web.filter.CharacterEncodingFilter
+	    </filter-class>
+	    <init-param>
+	        <param-name>encoding</param-name>
+	        <param-value>UTF-8</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>encoding-filter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+  <!-- END: Spring -->
+   
+</web-app>
