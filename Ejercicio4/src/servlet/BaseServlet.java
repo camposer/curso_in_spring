@@ -7,5 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @SuppressWarnings("serial")
 public abstract class BaseServlet extends HttpServlet {
-	protected static ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+	protected static ApplicationContext ctx = 
+			new ClassPathXmlApplicationContext("applicationContext.xml");
 }

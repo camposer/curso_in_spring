@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,9 +46,8 @@ public class Persona implements Serializable {
 	private String nombre;
 
 	//bi-directional many-to-one association to Ordenador
-	//@OneToMany(mappedBy="persona", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="persona", fetch=FetchType.EAGER)
 	//@OneToMany(mappedBy="persona", cascade=CascadeType.ALL) // => LAZY y Cascada en PERSIST, MERGE, REMOVE
-	@OneToMany(mappedBy="persona") // => LAZY
 	private List<Ordenador> ordenadores;
 
 	public Persona() {

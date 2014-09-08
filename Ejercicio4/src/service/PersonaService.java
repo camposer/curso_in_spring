@@ -26,6 +26,7 @@ public class PersonaService implements IPersonaService {
 		try {
 			return personaDao
 				.obtenerTodosOrdenadosPorNombreApellido();
+			
 		} catch (AppDaoException e) {
 			throw new AppServiceException(e);
 		}

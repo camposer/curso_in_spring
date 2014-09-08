@@ -2,8 +2,11 @@ package dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import model.Ordenador;
 
+@Component // Hace que Spring cree una instancia de este bean (con id camelCase, por ejemplo: ordenadorDao)
 public class OrdenadorDao 
 		extends GenericDao<Ordenador, Integer> 
 		implements IOrdenadorDao {

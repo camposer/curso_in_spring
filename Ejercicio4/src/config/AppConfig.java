@@ -11,13 +11,9 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import service.IOrdenadorService;
 import service.IPersonaService;
-import service.OrdenadorService;
 import service.PersonaService;
-import dao.IOrdenadorDao;
 import dao.IPersonaDao;
-import dao.OrdenadorDao;
 import dao.PersonaDao;
 
 @EnableTransactionManagement // Habilita el manejo de transacciones
@@ -48,17 +44,8 @@ public class AppConfig {
 	}
 
 	@Bean
-	public IOrdenadorDao ordenadorDao() {
-		return new OrdenadorDao();
-	}
-	
-	@Bean
 	public IPersonaService personaService() {
 		return new PersonaService();
 	}
 
-	@Bean
-	public IOrdenadorService ordenadorService() {
-		return new OrdenadorService();
-	}
 }

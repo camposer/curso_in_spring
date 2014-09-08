@@ -6,12 +6,14 @@ import model.Ordenador;
 import model.Persona;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import dao.IOrdenadorDao;
 import exception.AppDaoException;
 import exception.AppServiceException;
 
+@Component
 @Transactional
 public class OrdenadorService implements IOrdenadorService {
 	@Autowired

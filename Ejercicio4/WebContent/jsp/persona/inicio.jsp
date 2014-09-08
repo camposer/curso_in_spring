@@ -205,7 +205,7 @@
 						<td>
 							<% 
 								List<Ordenador> ordenadores = (List<Ordenador>)
-									p.getOrdenadores();
+									p.getOrdenadores(); // ANTI-PATRÓN!
 								if (ordenadores != null) for (Ordenador o : ordenadores) { 
 							%>
 								<a href="../ordenador/Mostrar?id=<%= o.getId() %>">
