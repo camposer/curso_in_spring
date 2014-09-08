@@ -14,7 +14,7 @@ import exception.AppDaoException;
 
 public abstract class GenericDao<T, K> implements IDao<T, K> {
 	@Autowired
-	@Qualifier("entityManager")
+	@Qualifier("entityManager") // Especifica el id del bean
 	@PersistenceContext // Habilita el manejo de EntityManager por parte de Spring. Permite el manejo de @Transactional
 	protected EntityManager em;
 	protected Class<T> clase;

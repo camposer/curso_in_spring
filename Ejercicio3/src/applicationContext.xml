@@ -31,7 +31,7 @@
 			<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 	
-	<tx:annotation-driven transaction-manager="transactionManager"/><!-- Habilita el manejo de transacciones -->
+	<tx:annotation-driven transaction-manager="transactionManager"/><!-- Habilita el manejo de transacciones @Transactional -->
 	<!-- END: Habilitando manejo de BD -->
 
 	<bean id="personaDao" class="dao.PersonaDao"/>
