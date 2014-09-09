@@ -33,9 +33,9 @@
 			var form = document.forms.formOrdenador;
 			
 			if (op == AGREGAR)
-				form.action = "Agregar";
+				form.action = "agregar.per";
 			else if (op == MODIFICAR)
-				form.action = "Modificar";
+				form.action = "modificar.per";
 			
 			form.submit();
 		};
@@ -141,12 +141,12 @@
 					<td>${o.serial}</td>
 					<td>${o.persona.nombre} ${o.persona.apellido} (<c:out value="${o.persona.edad}"/>)</td>
 					<td><a
-							href="Mostrar?id=${o.id}"> 
+							href="mostrar.per?id=${o.id}"> 
 								mostrar
 						</a>
 					</td>
 					<td><a 
-							href="<%= getServletContext().getContextPath() %>/ordenador/Eliminar?id=${o.id}" 
+							href="<%= getServletContext().getContextPath() %>/ordenador/eliminar.per?id=${o.id}" 
 							onclick="return confirmar()">
 								eliminar
 						</a>
