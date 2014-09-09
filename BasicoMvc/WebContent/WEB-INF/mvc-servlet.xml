@@ -11,5 +11,5 @@
 	<!-- Fichero de configuración de los controladores -->
 	
 	<context:annotation-config/><!-- Habilita el manejo de anotacionesn de Spring -->
-	<context:component-scan base-package="controller"/>
+	<context:component-scan base-package="controller, validator"/>
 </beans>		

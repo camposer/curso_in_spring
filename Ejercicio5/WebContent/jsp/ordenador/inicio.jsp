@@ -102,12 +102,12 @@
 		<tr>
 			<td colspan="2">
 				<c:choose>
-					<c:when test="${empty o}"><!-- Valida si ordenador es igual a null -->
+					<c:when test="${empty o || empty errores}"><!-- Valida si ordenador es igual a null -->
 						<input type="button" value="Agregar" onclick="guardar(AGREGAR)"/>
 					</c:when>
 					<c:otherwise>
 						<!-- En cancelar: forma alternativa de realizar una petición con JS -->
-						<input type="button" value="Cancelar" onclick="window.location.href='Inicio'"/>
+						<input type="button" value="Cancelar" onclick="window.location.href='inicio.per'"/>
 						<input type="button" value="Modificar" onclick="guardar(MODIFICAR)"/>
 					</c:otherwise>
 				</c:choose>

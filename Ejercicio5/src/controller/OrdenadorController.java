@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import service.IOrdenadorService;
 import service.IPersonaService;
 import exception.AppServiceException;
+import form.OrdenadorForm;
 
 @Controller
 @RequestMapping(value="/ordenador/")
@@ -71,9 +72,17 @@ public class OrdenadorController {
 		
 		List<String> errores = new ArrayList<String>();
 		
+		// Con los datos previamente introducidos
+		Ordenador ordenadorForm = new Ordenador();
+		ordenadorForm.setNombre(nombre);
+		ordenadorForm.setSerial(serial);
+		Persona pForm = new Persona();
+		pForm.setId(pId);
+		ordenadorForm.setPersona(pForm);
+		
 		// Validaciones
 		if (nombre.trim().equals("")) // Validando nombre
-			errores.add("Nombre inválido"); 
+			errores.add("Nombre inválido");
 		if (serial.trim().equals("")) // Validando serial
 			errores.add("Serial inválido"); 
 		if (pId == null || pId <= 0)
@@ -97,8 +106,10 @@ public class OrdenadorController {
 			}
 		}
 		
-		if (errores.size() > 0) 
+		if (errores.size() > 0) {
 			session.setAttribute("errores", errores);
+			session.setAttribute("ordenador", ordenadorForm);
+		}
 		
 		// Redireccionando (ejecuta el cliente!!!)
 		return "redirect:/ordenador/inicio.per";
@@ -146,7 +157,47 @@ public class OrdenadorController {
 		else if (o != null)
 			session.setAttribute("ordenador", o);
 		
-		return "redirect:inicio.per";
+		return "redirect:/ordenador/inicio.per"; 
+	}
+	
+	@RequestMapping(value="modificar", method=RequestMethod.POST)
+	public String modificar(OrdenadorForm ordenadorForm, HttpSession session) {
+		List<String> errores = new ArrayList<String>();
 		
+		// Validaciones
+		if (ordenadorForm.getInputId() == null)
+			errores.add("Id inválido");
+		if (ordenadorForm.getInputNombre().trim().equals("")) // Validando nombre
+			errores.add("Nombre inválido"); 
+		if (ordenadorForm.getInputSerial().trim().equals("")) // Validando apellido
+			errores.add("Serial inválido"); 
+		if (ordenadorForm.getInputPersona() == null)
+			errores.add("Persona id inválido");
+		
+		if (errores.size() == 0) { // No hay errores
+			// Agregando a la persona
+			Persona p = new Persona();
+			p.setId(ordenadorForm.getInputPersona());
+			
+			Ordenador o = new Ordenador();
+			o.setId(ordenadorForm.getInputId());
+			o.setNombre(ordenadorForm.getInputNombre());
+			o.setSerial(ordenadorForm.getInputSerial());
+			o.setPersona(p);
+			
+			try {
+				ordenadorService.modificarOrdenador(o);
+			} catch (AppServiceException e) {
+				errores.add("Error de acceso a datos");
+				e.printStackTrace();
+			}
+		}
+		
+		if (errores.size() > 0) {
+			session.setAttribute("errores", errores);
+		}
+		
+		// Redireccionando (ejecuta el cliente!!!)
+		return "redirect:/ordenador/inicio.per"; 
 	}
 }
