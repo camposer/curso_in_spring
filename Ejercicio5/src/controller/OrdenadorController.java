@@ -103,4 +103,25 @@ public class OrdenadorController {
 		// Redireccionando (ejecuta el cliente!!!)
 		return "redirect:/ordenador/inicio.per";
 	}
+	
+	@RequestMapping("eliminar")
+	public String eliminar(@RequestParam Integer id, HttpSession session) {
+		List<String> errores = new ArrayList<String>();
+
+		if (id == null)
+			errores.add("Id de ordenador inválido");
+		
+		try {
+			if (id != null)
+				ordenadorService.eliminarOrdenador(id);
+		} catch (Exception e) {
+			errores.add("Error al eliminar la ordenador en BD");
+			e.printStackTrace();
+		}
+
+		if (errores.size() > 0)
+			session.setAttribute("errores", errores);
+		
+		return "redirect:/ordenador/inicio.per";
+	}
 }
