@@ -124,4 +124,29 @@ public class OrdenadorController {
 		
 		return "redirect:/ordenador/inicio.per";
 	}
+	
+	@RequestMapping("mostrar")
+	public String mostrar(@RequestParam Integer id, HttpSession session) {
+		List<String> errores = new ArrayList<String>();
+		Ordenador o = null;
+		
+		if (id == null)
+			errores.add("Id inválido");
+		
+		try {
+			if (id != null)
+				o = ordenadorService.obtenerOrdenador(id);
+		} catch (Exception e) {
+			errores.add("Error al consultar la ordenador en BD");
+			e.printStackTrace();
+		}
+
+		if (errores.size() > 0)
+			session.setAttribute("errores", errores);
+		else if (o != null)
+			session.setAttribute("ordenador", o);
+		
+		return "redirect:inicio.per";
+		
+	}
 }
