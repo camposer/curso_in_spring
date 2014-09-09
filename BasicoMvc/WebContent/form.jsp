@@ -7,6 +7,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Formulario ModelAttribute</title>
+	<style>
+		.error {
+			color: red;
+		}
+	</style>
 </head>
 <body>
 	<h1>Form con método antiguo</h1>
@@ -21,19 +26,19 @@
 	<!-- 
 		commandName: Nombre del ModelAttribute definido en el Controller
 	 -->
-	<form:form action="clic.do" commandName="personaForm">
-		<form:errors path="*" cssStyle="border: red;"/>
+	<form:form action="clic.do" commandName="personaForm" method="post">
+		<form:errors path="*" cssClass="error"/><br/><br/>
 	
 		Nombre: <form:input path="nombre"/>
-		<form:errors path="nombre" cssStyle="font-color: red;"/>
+		<form:errors path="nombre" cssClass="error"/>
 		<br/>
 		Apellido: 
 		<input type="text" name="apellido" value="${personaForm.apellido}"/>
-		<form:errors path="apellido" cssStyle="font-color: red;"/>
+		<form:errors path="apellido" cssClass="error"/>
 		<br/>
 		Edad: 
 		<form:input path="edad"/>
-		<form:errors path="edad" cssStyle="font-color: red;"/>		
+		<form:errors path="edad" cssClass="error"/>		
 		<br/>
 		<input type="submit" value="clic"/>
 	</form:form>

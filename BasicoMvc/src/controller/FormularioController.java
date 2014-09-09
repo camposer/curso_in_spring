@@ -2,7 +2,6 @@ package controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +16,9 @@ import form.PersonaForm;
 
 @Controller
 public class FormularioController {
-	@Autowired
-	PersonaFormValidator personaFormValidator;
-	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.setValidator(personaFormValidator);
+		binder.setValidator(new PersonaFormValidator());
 	}
 	
 	// Se ejecuta siempre antes de cada acción
@@ -51,13 +47,10 @@ public class FormularioController {
 	
 	@RequestMapping(value="/clic", method=RequestMethod.POST)
 	public String clic(
-			@Valid PersonaForm personaForm, 
-			Model model, 
+			@Valid @ModelAttribute("personaForm") PersonaForm personaForm,
 			BindingResult result) {
 		
 		// TODO: Podemos jugar con result.hasErrors()
-		
-		model.addAttribute("personaForm", personaForm);
 		return "form.jsp";
 	}
 	
