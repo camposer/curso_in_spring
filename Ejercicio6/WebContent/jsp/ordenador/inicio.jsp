@@ -71,19 +71,13 @@
 		<tr>
 			<td>Dueño:</td>
 			<td>
-				<select name="inputPersona">
-					<option value="-1">Seleccione un dueño</option>
-					<c:forEach var="p" items="${requestScope.personas}">
-						<c:set var="selected" value=""/>
-						<c:if test="${ordenadorForm.inputPersona == p.id}">
-							<c:set var="selected" value="selected"/>
-						</c:if>
-					
-						<option value="${p.id}" ${selected}>
-							${p.nombre} ${p.apellido}
-						</option>
-					</c:forEach>
-				</select>
+				<form:select path="inputPersona">
+					<form:option value="-1" label="Seleccione un dueño"/>
+					<form:options 
+						items="${personas}" 
+						itemLabel="nombreCompleto"
+						itemValue="id"/>
+				</form:select>
 			</td>
 		</tr>
 		<tr>

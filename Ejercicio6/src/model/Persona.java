@@ -98,6 +98,11 @@ public class Persona implements Serializable {
 		return this.nombre;
 	}
 
+	@Transient
+	public String getNombreCompleto() {
+		return this.nombre + " " + this.apellido;
+	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
