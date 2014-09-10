@@ -8,7 +8,6 @@ import form.OrdenadorForm;
 
 @Component
 public class OrdenadorFormValidator implements Validator {
-
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return OrdenadorForm.class.equals(clazz);

@@ -48,7 +48,8 @@
 	
 	<form:form name="formOrdenador" method="post" commandName="ordenadorForm">
 	<div class="errores">
-		<form:errors path="*"/>
+		${errores}<!-- Estos errores vienen del model -->
+		<form:errors path="*"/><!-- Estos errores vienen del BindingResult -->
 	</div>
 
 	<form:hidden path="inputId"/>
@@ -83,7 +84,7 @@
 		<tr>
 			<td colspan="2">
 				<c:choose>
-					<c:when test="${true}"><!-- Valida si ordenador es igual a null -->
+					<c:when test="${empty esModificar}"><!-- Valida si ordenador es igual a null -->
 						<input type="button" value="Agregar" onclick="guardar(AGREGAR)"/>
 					</c:when>
 					<c:otherwise>

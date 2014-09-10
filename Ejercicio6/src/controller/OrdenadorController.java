@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import model.Ordenador;
@@ -90,8 +89,6 @@ public class OrdenadorController {
 				BindingResult result
 			) {
 
-		model.addAttribute("huboErrores", result.hasErrors());
-		
 		if (!result.hasErrors()) { // No hay errores
 			// Agregando el ordenador
 			Persona p = new Persona();
@@ -119,66 +116,72 @@ public class OrdenadorController {
 		}
 	}
 	
+	/** 
+	 * @see http://stackoverflow.com/questions/3052752/spring-adding-bindingresult-to-newly-created-model-attribute 
+	 **/
 	@RequestMapping("eliminar")
-	public String eliminar(@RequestParam Integer id, HttpSession session) {
+	public String eliminar(
+			@RequestParam Integer id, 
+			Model model) {
+		
 		List<String> errores = new ArrayList<String>();
-
-		if (id == null)
-			errores.add("Id de ordenador inválido");
 		
 		try {
-			if (id != null)
-				ordenadorService.eliminarOrdenador(id);
+			ordenadorService.eliminarOrdenador(id);
 		} catch (Exception e) {
 			errores.add("Error al eliminar la ordenador en BD");
 			e.printStackTrace();
 		}
 
-		if (errores.size() > 0)
-			session.setAttribute("errores", errores);
+		if (errores.size() > 0) {
+			model.addAttribute("errores", errores);
+			inicializar(model);
+			return "forward:/jsp/ordenador/inicio.jsp";
+		} else {
+			return "redirect:/ordenador/inicio.per";
+		}
 		
-		return "redirect:/ordenador/inicio.per";
 	}
 	
 	@RequestMapping("mostrar")
-	public String mostrar(@RequestParam Integer id, HttpSession session) {
+	public String mostrar(@RequestParam Integer id, Model model) {
 		List<String> errores = new ArrayList<String>();
-		Ordenador o = null;
-		
-		if (id == null)
-			errores.add("Id inválido");
+		OrdenadorForm ordenadorForm = new OrdenadorForm();
 		
 		try {
-			if (id != null)
-				o = ordenadorService.obtenerOrdenador(id);
+			Ordenador o = ordenadorService.obtenerOrdenador(id);
+			
+			// Creando ordenadorForm a partir de la BD
+			ordenadorForm.setInputId(o.getId());
+			ordenadorForm.setInputNombre(o.getNombre());
+			ordenadorForm.setInputSerial(o.getSerial());
+			ordenadorForm.setInputPersona(o.getPersona().getId());
+			
+			model.addAttribute("ordenadorForm", ordenadorForm);
 		} catch (Exception e) {
 			errores.add("Error al consultar la ordenador en BD");
 			e.printStackTrace();
 		}
 
-		if (errores.size() > 0)
-			session.setAttribute("errores", errores);
-		else if (o != null)
-			session.setAttribute("ordenador", o);
-		
-		return "redirect:/ordenador/inicio.per"; 
+		if (errores.size() > 0) 
+			model.addAttribute("errores", errores);
+
+		model.addAttribute("esModificar", true);
+		inicializar(model);
+		return "forward:/jsp/ordenador/inicio.jsp"; 
 	}
 	
 	@RequestMapping(value="modificar", method=RequestMethod.POST)
-	public String modificar(OrdenadorForm ordenadorForm, HttpSession session) {
-		List<String> errores = new ArrayList<String>();
+	public String modificar(
+			Model model,
+			@ModelAttribute @Valid OrdenadorForm ordenadorForm,
+			BindingResult result) {
+
+		// Validando id (no está en ordenadorFormValidator
+		if (ordenadorForm.getInputId() == null) 
+			result.reject("id", "Id inválido");
 		
-		// Validaciones
-		if (ordenadorForm.getInputId() == null)
-			errores.add("Id inválido");
-		if (ordenadorForm.getInputNombre().trim().equals("")) // Validando nombre
-			errores.add("Nombre inválido"); 
-		if (ordenadorForm.getInputSerial().trim().equals("")) // Validando apellido
-			errores.add("Serial inválido"); 
-		if (ordenadorForm.getInputPersona() == null)
-			errores.add("Persona id inválido");
-		
-		if (errores.size() == 0) { // No hay errores
+		if (!result.hasErrors()) { // No hay errores
 			// Agregando a la persona
 			Persona p = new Persona();
 			p.setId(ordenadorForm.getInputPersona());
@@ -192,16 +195,17 @@ public class OrdenadorController {
 			try {
 				ordenadorService.modificarOrdenador(o);
 			} catch (AppServiceException e) {
-				errores.add("Error de acceso a datos");
+				result.reject("bd", "Error de acceso a datos");
 				e.printStackTrace();
 			}
 		}
 		
-		if (errores.size() > 0) {
-			session.setAttribute("errores", errores);
+		if (result.hasErrors()) {
+			inicializar(model);
+			return "forward:/jsp/ordenador/inicio.jsp"; // Los errores viajan en el request
+		} 
+		else {
+			return "redirect:/ordenador/inicio.per"; // Aquí se pierde el request!!
 		}
-		
-		// Redireccionando (ejecuta el cliente!!!)
-		return "redirect:/ordenador/inicio.per"; 
 	}
 }
