@@ -7,6 +7,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="tag" uri="http://www.springframework.org/tags" %>
+
+<% Object esModificar = request.getAttribute("esModificar"); %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +32,7 @@
 		const MODIFICAR = 1;
 	
 		var confirmar = function() {
-			var confirmado = confirm("Está seguro de que desea eliminar la persona seleccionada?");
+			var confirmado = confirm("<tag:message code="persona.confirmacionEliminar"/>");
 			return confirmado; // true o false
 		};
 		
@@ -42,10 +46,22 @@
 			
 			form.submit();
 		};
+		
+		var init = function(){
+			var inputNombreOrdenador = document.getElementById("inputNombreOrdenador");
+			var inputSerialOrdenador = document.getElementById("inputSerialOrdenador");
+			var esModificarJs = <%= (esModificar != null)?"true":"false" %>;
+			
+			if (esModificarJs) {
+				inputNombreOrdenador.readOnly = true;
+				inputSerialOrdenador.readOnly = true;
+			} 
+		};
 	</script>
 </head>
-<body>
-	<h1>Personas</h1>
+<body onload="init()">
+
+	<h1><tag:message code="persona.titulo"/></h1>
 	<%@ include file="/jsp/comun/cabecera.jsp" %>
 	
 	<form:form name="formPersona" method="post" commandName="personaForm">
@@ -57,25 +73,25 @@
 	<form:hidden path="inputId"/>
 	<table class="tablaCentrada tablaFormulario">
 		<tr>
-			<td>Nombre:</td>
+			<td><tag:message code="persona.form.nombre"/>:</td>
 			<td>
 				<form:input path="inputNombre"/>
 			</td>
 		</tr>
 		<tr>
-			<td>Apellido:</td>
+			<td><tag:message code="persona.form.apellido"/>:</td>
 			<td>
 				<form:input path="inputApellido"/>
 			</td>
 		</tr>
 		<tr>
-			<td>Fecha:</td>
+			<td><tag:message code="persona.form.fecha"/>:</td>
 			<td>
 				<form:input path="inputFecha"/>
 			</td>
 		</tr>
 		<tr>
-			<td>Altura:</td>
+			<td><tag:message code="persona.form.altura"/>:</td>
 			<td>
 				<form:input path="inputAltura"/>
 			</td>
@@ -84,18 +100,18 @@
 			<td colspan="2">
 				<!-- Ordenador -->
 				<hr/>
-				<div id="tituloOrdenadores">Ordenadores:</div>			
+				<div id="tituloOrdenadores"><tag:message code="ordenador.titulo"/>:</div>			
 				<table>
 					<tr>
-						<td>Nombre:</td>
+						<td><tag:message code="ordenador.form.nombre"/>:</td>
 						<td>
-							<form:input path="inputNombreOrdenador"/>
+							<form:input path="inputNombreOrdenador" />
 						</td>
 					</tr>
 					<tr>
-						<td>Serial:</td>
+						<td><tag:message code="ordenador.form.serial"/>:</td>
 						<td>
-							<form:input path="inputSerialOrdenador"/>
+							<form:input path="inputSerialOrdenador" />
 						</td>
 					</tr>
 				</table>
@@ -103,19 +119,13 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				<% 
-					if (true) { // TODO: Incluir lógica
-				%>
-				<input type="button" value="Agregar" onclick="guardar(AGREGAR)"/>
-				<% 
-					} else {
-				%>
+				<% if (esModificar == null) { %>
+				<input type="button" value="<tag:message code="persona.form.btnAgregar"/>" onclick="guardar(AGREGAR)"/>
+				<% } else { %>
 				<!-- En cancelar: forma alternativa de realizar una petición con JS -->
-				<input type="button" value="Cancelar" onclick="window.location.href='inicio.per'"/>
-				<input type="button" value="Modificar" onclick="guardar(MODIFICAR)"/>
-				<% 
-					}
-				%>
+				<input type="button" value="<tag:message code="persona.form.btnCancelar"/>" onclick="window.location.href='inicio.per'"/>
+				<input type="button" value="<tag:message code="persona.form.btnModificar"/>" onclick="guardar(MODIFICAR)"/>
+				<% } %>
 			</td>
 		</tr>
 	</table>
@@ -134,7 +144,7 @@
 				<th>Altura</th>
 				<th>Ordenadores</th>
 				<th>Mostrar</th>
-				<th>Eliminar</th>			
+				<th>Elimordenador/inicio.per?lang=eninar</th>			
 			</tr>
 		</thead>
 
@@ -170,13 +180,13 @@
 						</td>
 						<td><a
 								href="mostrar.per?id=<%= p.getId() %>"> 
-									mostrar
+									<tag:message code="persona.tabla.mostrarLink"/>
 							</a>
 						</td>
 						<td><a 
 								href="<%= getServletContext().getContextPath() %>/persona/eliminar.per?id=<%= p.getId() %>" 
 								onclick="return confirmar()">
-									eliminar
+									<tag:message code="persona.tabla.eliminarLink"/>
 							</a>
 						</td>
 					</tr>

@@ -20,25 +20,25 @@ public class PersonaFormValidator implements Validator {
 		
 		if (personaForm.getInputNombre() == null || 
 				personaForm.getInputNombre().trim().equals("")) // Validando nombre
-			errores.reject("inputNombre", "Nombre inválido"); 
+			errores.rejectValue("inputNombre", "persona.error.nombre"); 
 		
 		if (personaForm.getInputApellido() == null || 
 				personaForm.getInputApellido().trim().equals("")) // Validando apellido
-			errores.reject("inputApellido", "Apellido inválido");
+			errores.rejectValue("inputApellido", "persona.noexiste", "Apellido inválido");
 		
 		if (personaForm.getInputFecha() == null)
-			errores.reject("inputFecha", "Fecha inválida");
+			errores.rejectValue("inputFecha", "persona.error.fecha");
 
 		if (personaForm.getInputAltura() == null || 
 				personaForm.getInputAltura() <= 0)
-			errores.reject("inputAltura", "Altura inválida");
+			errores.rejectValue("inputAltura", "persona.error.altura");
 
 		if (personaForm.getInputNombreOrdenador() == null ||
 				personaForm.getInputNombreOrdenador().trim().equals("")) // Validando nombre de ordenador
-			errores.reject("inputNombreOrdenador", "Nombre de ordenador inválido");
+			errores.rejectValue("inputNombreOrdenador", "persona.error.nombreOrdenador");
 		
 		if (personaForm.getInputSerialOrdenador() == null ||
 				personaForm.getInputSerialOrdenador().trim().equals("")) // Validando serial de ordenador
-			errores.reject("inputSerialOrdenador", "Serial de ordenador inválido");
+			errores.rejectValue("inputSerialOrdenador", "persona.error.serialOrdenador");
 	}
 }
