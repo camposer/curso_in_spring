@@ -6,6 +6,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="tag" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,10 +41,19 @@
 			
 			form.submit();
 		};
+		
+		// Cómo pasar valores desde Java a JS
+		<%= "var init = function() {" %>
+			var select = document.getElementById("inputPersona");
+			var texto = '<tag:message code="ordenador.form.persona.opcion.0"/>';
+			var opcion = "<option value='-1'>" + texto + "</option>";
+			var selectAnterior = select.innerHTML;
+			select.innerHTML = opcion + selectAnterior;
+		};
 	</script>
 </head>
-<body>
-	<h1>Ordenadores</h1>
+<body onload="init()">
+	<h1><tag:message code="ordenador.titulo"/></h1>
 	<%@ include file="/jsp/comun/cabecera.jsp" %>
 	
 	<form:form name="formOrdenador" method="post" commandName="ordenadorForm">
@@ -55,7 +65,7 @@
 	<form:hidden path="inputId"/>
 	<table class="tablaCentrada tablaFormulario">
 		<tr>
-			<td>Nombre:</td>
+			<td><tag:message code="ordenador.form.nombre"/>:</td>
 			<td>
 				<input 
 					type="text" 
@@ -64,16 +74,15 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Serial:</td>
+			<td><tag:message code="ordenador.form.serial"/>:</td>
 			<td>
 				<form:input path="inputSerial"/>
 			</td>
 		</tr>
 		<tr>
-			<td>Dueño:</td>
+			<td><tag:message code="ordenador.form.persona"/>:</td>
 			<td>
 				<form:select path="inputPersona">
-					<form:option value="-1" label="Seleccione un dueño"/>
 					<form:options 
 						items="${personas}" 
 						itemLabel="nombreCompleto"
@@ -85,12 +94,14 @@
 			<td colspan="2">
 				<c:choose>
 					<c:when test="${empty esModificar}"><!-- Valida si ordenador es igual a null -->
-						<input type="button" value="Agregar" onclick="guardar(AGREGAR)"/>
+						<input type="button" 
+							value="<tag:message code="ordenador.form.btnAgregar"/>" 
+							onclick="guardar(AGREGAR)"/>
 					</c:when>
 					<c:otherwise>
 						<!-- En cancelar: forma alternativa de realizar una petición con JS -->
-						<input type="button" value="Cancelar" onclick="window.location.href='inicio.per'"/>
-						<input type="button" value="Modificar" onclick="guardar(MODIFICAR)"/>
+						<input type="button" value="<tag:message code="ordenador.form.btnCancelar"/>" onclick="window.location.href='inicio.per'"/>
+						<input type="button" value="<tag:message code="ordenador.form.btnModificar"/>" onclick="guardar(MODIFICAR)"/>
 					</c:otherwise>
 				</c:choose>
 			</td>
@@ -104,12 +115,12 @@
 		<thead>
 			<tr>
 				<th>#</th>
-				<th>Id</th>
-				<th>Nombre</th>
-				<th>Serial</th>
-				<th>Dueño</th>
-				<th>Mostrar</th>
-				<th>Eliminar</th>			
+				<th><tag:message code="ordenador.tabla.id"/></th>
+				<th><tag:message code="ordenador.tabla.nombre"/></th>
+				<th><tag:message code="ordenador.tabla.serial"/></th>
+				<th><tag:message code="ordenador.tabla.persona"/></th>
+				<th><tag:message code="ordenador.tabla.mostrar"/></th>
+				<th><tag:message code="ordenador.tabla.eliminar"/></th>			
 			</tr>
 		</thead>
 
@@ -124,13 +135,13 @@
 					<td>${o.persona.nombre} ${o.persona.apellido} (<c:out value="${o.persona.edad}"/>)</td>
 					<td><a
 							href="mostrar.per?id=${o.id}"> 
-								mostrar
+								<tag:message code="ordenador.tabla.mostrarLink"/>
 						</a>
 					</td>
 					<td><a 
 							href="<%= getServletContext().getContextPath() %>/ordenador/eliminar.per?id=${o.id}" 
 							onclick="return confirmar()">
-								eliminar
+								<tag:message code="ordenador.tabla.eliminarLink"/>
 						</a>
 					</td>
 				</tr>

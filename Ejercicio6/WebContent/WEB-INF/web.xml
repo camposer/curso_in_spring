@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name>Ejercicio6</display-name>
+  
+  <!-- Define el front controller (DispatcherServlet) -->
   <servlet>
     <servlet-name>mvc</servlet-name>
     <servlet-class>
@@ -8,17 +10,23 @@
          </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <servlet-mapping>
+  <servlet-mapping><!-- Mapping del DispatcherServlet -->
     <servlet-name>mvc</servlet-name>
     <url-pattern>*.per</url-pattern>
   </servlet-mapping>
+  
+  <!-- Carga el contexto de Spring al inicializar el contenedor -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  
+  <!-- Define dónde está el applicationContext.xml -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/applicationContext.xml</param-value>
   </context-param>
+  
+  <!-- Mantiene la conexión abierta en las JSP -->
   <filter>
     <filter-name>OpenEntityManagerInViewFilter</filter-name>
     <filter-class>
@@ -33,6 +41,8 @@
     <filter-name>OpenEntityManagerInViewFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
+  <!-- Configura la codificación de las peticios y respuestas -->
   <filter>
     <filter-name>encoding-filter</filter-name>
     <filter-class>

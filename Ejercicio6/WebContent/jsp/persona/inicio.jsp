@@ -1,9 +1,12 @@
+<%@page import="form.PersonaForm"%>
 <%@page import="model.Ordenador"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="model.Persona"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +36,9 @@
 			var form = document.forms.formPersona;
 			
 			if (op == AGREGAR)
-				form.action = "Agregar";
+				form.action = "agregar.per";
 			else if (op == MODIFICAR)
-				form.action = "Modificar";
+				form.action = "modificar.per";
 			
 			form.submit();
 		};
@@ -45,75 +48,36 @@
 	<h1>Personas</h1>
 	<%@ include file="/jsp/comun/cabecera.jsp" %>
 	
-	<div class="errores">
-	<%
-		List<String> errores = (List<String>)
-			session.getAttribute("errores"); 
-		if (errores != null && errores.size() > 0) 
-			for (String e : errores) {
-	%>
-				<%= e %><br/>
-	<%
-			}
-		session.removeAttribute("errores");
-	%>
-	</div>
+	<form:form name="formPersona" method="post" commandName="personaForm">
+		<div class="errores">
+			${errores}
+			<form:errors path="*"/>
+		</div>
 	
-	<form name="formPersona" method="post">
-	
-	<%
-		Persona persona = (Persona)session.getAttribute("persona");
-		String fecha = "";
-		if (persona != null && persona.getFechanacimiento() != null)
-			fecha = new SimpleDateFormat("yyyy-MM-dd")
-				.format(persona.getFechanacimiento());
-	%>
-	
-	<input 
-		type="hidden" 
-		name="inputId" 
-		id="inputId"
-		value="<%= (persona!=null)?persona.getId():"" %>"/>
+	<form:hidden path="inputId"/>
 	<table class="tablaCentrada tablaFormulario">
-	
 		<tr>
 			<td>Nombre:</td>
 			<td>
-				<input 
-					type="text" 
-					name="inputNombre" 
-					id="inputNombre"
-					value="<%= (persona!=null)?persona.getNombre():"" %>"/>
+				<form:input path="inputNombre"/>
 			</td>
 		</tr>
 		<tr>
 			<td>Apellido:</td>
 			<td>
-				<input 
-					type="text" 
-					name="inputApellido" 
-					id="inputApellido"
-					value="<%= (persona!=null)?persona.getApellido():"" %>"/>
+				<form:input path="inputApellido"/>
 			</td>
 		</tr>
 		<tr>
 			<td>Fecha:</td>
 			<td>
-				<input 
-					type="text" 
-					name="inputFecha" 
-					id="inputFecha"
-					value="<%= fecha %>"/>
+				<form:input path="inputFecha"/>
 			</td>
 		</tr>
 		<tr>
 			<td>Altura:</td>
 			<td>
-				<input 
-					type="text" 
-					name="inputAltura" 
-					id="inputAltura"
-					value="<%= (persona!=null)?persona.getAltura():"" %>"/>
+				<form:input path="inputAltura"/>
 			</td>
 		</tr>
 		<tr>
@@ -125,21 +89,13 @@
 					<tr>
 						<td>Nombre:</td>
 						<td>
-							<input 
-								type="text" 
-								name="inputNombreOrdenador" 
-								id="inputNombreOrdenador"
-								value=""/>
+							<form:input path="inputNombreOrdenador"/>
 						</td>
 					</tr>
 					<tr>
 						<td>Serial:</td>
 						<td>
-							<input 
-								type="text" 
-								name="inputSerialOrdenador" 
-								id="inputSerialOrdenador"
-								value=""/>
+							<form:input path="inputSerialOrdenador"/>
 						</td>
 					</tr>
 				</table>
@@ -148,14 +104,14 @@
 		<tr>
 			<td colspan="2">
 				<% 
-					if (persona == null) {
+					if (true) { // TODO: Incluir lógica
 				%>
 				<input type="button" value="Agregar" onclick="guardar(AGREGAR)"/>
 				<% 
 					} else {
 				%>
 				<!-- En cancelar: forma alternativa de realizar una petición con JS -->
-				<input type="button" value="Cancelar" onclick="window.location.href='Inicio'"/>
+				<input type="button" value="Cancelar" onclick="window.location.href='inicio.per'"/>
 				<input type="button" value="Modificar" onclick="guardar(MODIFICAR)"/>
 				<% 
 					}
@@ -163,11 +119,8 @@
 			</td>
 		</tr>
 	</table>
-	</form>
-	<%
-		if (persona != null)
-			session.removeAttribute("persona");
-	%>
+	</form:form>
+
 	<br/>
 
 	<table id="tablaPersonas" class="tablaCentrada tablaDatos">
@@ -208,7 +161,7 @@
 									p.getOrdenadores(); // ANTI-PATRÓN!
 								if (ordenadores != null) for (Ordenador o : ordenadores) { 
 							%>
-								<a href="../ordenador/Mostrar?id=<%= o.getId() %>">
+								<a href="../ordenador/mostrar.per?id=<%= o.getId() %>">
 									<%= o.getNombre() %> - <%= o.getSerial() %><br/>
 								</a>
 							<%
@@ -216,12 +169,12 @@
 							%>
 						</td>
 						<td><a
-								href="Mostrar?id=<%= p.getId() %>"> 
+								href="mostrar.per?id=<%= p.getId() %>"> 
 									mostrar
 							</a>
 						</td>
 						<td><a 
-								href="<%= getServletContext().getContextPath() %>/persona/Eliminar?id=<%= p.getId() %>" 
+								href="<%= getServletContext().getContextPath() %>/persona/eliminar.per?id=<%= p.getId() %>" 
 								onclick="return confirmar()">
 									eliminar
 							</a>
