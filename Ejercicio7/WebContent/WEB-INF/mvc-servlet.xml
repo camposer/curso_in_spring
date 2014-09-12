@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<!-- Fichero de configuración de los controladores -->
+
+	<context:annotation-config /><!-- Habilita el manejo de anotaciones de Spring -->
+	<context:component-scan base-package="controller" />
+	<context:component-scan base-package="validator" />
+	<context:component-scan base-package="editor" />
+
+	<!-- Registrando los conversores -->
+	<bean id="conversionService"
+		class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="converter.StringToFloat" />
+				<bean class="converter.FloatToString" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- BEGIN: i18n -->
+	<!-- Define dónde estarán los messages.properties -->
+	<!-- Requerido -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:resources/messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<!-- Define la variable de i18n -->
+	<!-- Requerido -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
+	
+	<!-- Permite modificar el lenguaje dinámicamente por URL -->
+	<!-- Y lo define en la Cookie -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="es" />
+	</bean>
+	
+	<!-- Este es el interceptor que activa la i18n!! -->
+	<!-- Requerido -->
+	<bean id="handlerMapping"
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<ref bean="localeChangeInterceptor" />
+		</property>
+	</bean>
+	<!-- END: i18n -->
+</beans>		
